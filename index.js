@@ -13,14 +13,14 @@ let filesRelative = (dir, exclusions) => readDir(dir, exclusions).map(filename =
 let noExt = file => file.slice(0, _.lastIndexOf('.', file))
 
 // Slightly more convenient way to return a function which performs a certain regex match on a string.
-let string_match = regex => str => regex.test(str)
+let stringMatch = regex => str => regex.test(str)
 
 // ====================================================================================
 
 // Core.
 
 // Create a default filter.
-let filter = _.filter(string_match(/.js|.html|.jsx|.ts|.coffee|.less|.css|.sass|.hbs|.ejs/))
+let filter = _.filter(stringMatch(/.js|.html|.jsx|.ts|.coffee|.less|.css|.sass|.hbs|.ejs/))
 
 
 // Define the metagen function.
