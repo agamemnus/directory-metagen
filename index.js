@@ -10,7 +10,7 @@ let slice = start => thing => thing.slice(start)
 let relativeFilenames = (dir, exclusions) => readDir(dir, exclusions).map(n => slice(dir.length)(n))
 
 let noExt = file => file.slice(0, _.lastIndexOf('.', file))
-let test = regex => str => regex.test(str) // 
+let test = regex => str => regex.test(str) // This mirrors the test in Ramda: http://ramdajs.com/docs/
 
 // Core
 let defaultFilter = _.filter(test(/.js|.html|.jsx|.ts|.coffee|.less|.css|.sass|.hbs|.ejs/))
