@@ -13,8 +13,7 @@ let test = regex => str => regex.test(str)
 
 // Core.
 
-// Create a default filter.
-let filter = _.filter(test(/.js|.html|.jsx|.ts|.coffee|.less|.css|.sass|.hbs|.ejs/))
+let filter = _.filter(test(/.js|.html|.jsx|.ts|.coffee|.less|.css|.sass|.hbs|.ejs/)) // Create a default filter.
 let metagen = dir => relativeFilenames(dir.path, dir.exclusions || [dir.output || '__all.js'])
     .then(dir.filter || filter)
     .then(files => fs.writeFileAsync(dir.path + (dir.output || '__all.js'), dir.format(files, dir)))
