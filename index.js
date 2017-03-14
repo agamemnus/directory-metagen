@@ -8,7 +8,6 @@ let slice = start => thing => thing.slice(start)
 
 // Path Utils
 let relativeFilenames = (dir, exclusions) => readDir(dir, exclusions).map(slice(dir.length))
-
 let noExt = file => file.slice(0, _.lastIndexOf('.', file))
 let test = regex => str => regex.test(str) // This mirrors the test function in Ramda: http://ramdajs.com/docs/
 
@@ -17,6 +16,7 @@ let defaultFilter = _.filter(test(/.js|.html|.jsx|.ts|.coffee|.less|.css|.sass|.
 let metagen = dir => relativeFilenames(dir.path, dir.exclusions || [dir.output || '__all.js'])
     .then(dir.filter || defaultFilter)
     .then(files => fs.writeFileAsync(dir.path + (dir.output || '__all.js'), dir.format(files, dir)))
+
 
 // Output formats
 metagen.formats = {}
