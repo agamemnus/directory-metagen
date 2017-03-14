@@ -10,7 +10,6 @@ let noExt = file => file.slice(0, _.lastIndexOf('.', file))
 let test = regex => str => regex.test(str)
 
 // Core.
-
 let filter = _.filter(test(/.js|.html|.jsx|.ts|.coffee|.less|.css|.sass|.hbs|.ejs/)) // Create a default filter.
 let metagen = dir => relativeFilenames(dir.path, dir.exclusions || [dir.output || '__all.js'])
     .then(dir.filter || filter)
