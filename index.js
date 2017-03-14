@@ -9,7 +9,6 @@ let relativeFilenames = (dir, exclusions) => readDir(dir, exclusions).map(n => n
 let noExt = file => file.slice(0, _.lastIndexOf('.', file))
 let test = regex => str => regex.test(str)
 
-
 // Core.
 
 let filter = _.filter(test(/.js|.html|.jsx|.ts|.coffee|.less|.css|.sass|.hbs|.ejs/)) // Create a default filter.
