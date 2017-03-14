@@ -15,7 +15,6 @@ let metagen = dir => relativeFilenames(dir.path, dir.exclusions || [dir.output |
     .then(dir.filter || filter)
     .then(files => fs.writeFileAsync(dir.path + (dir.output || '__all.js'), dir.format(files, dir)))
 
-
 // Define various output formats.
 metagen.formats = {}
 metagen.formats.commonJS = files => `define(function(require) {
