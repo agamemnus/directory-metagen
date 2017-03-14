@@ -1,21 +1,24 @@
-// Inspired by (but complete rewrite of) requirejs-metagen.
-let _       = require('lodash/fp')
+// Inspired by (but complete rewrite of) requirejs-metagen
+let _ = require('lodash/fp')
 let Promise = require('bluebird')
-let readDir = Promise.promisify(require('recursive-readdir')) // Lists all files in a certain directory and all its sub-directories.
-let fs      = Promise.promisifyAll(require('fs'))
+let readDir = Promise.promisify(require('recursive-readdir'))
+let fs = Promise.promisifyAll(require('fs'))
 
-// Define path Utils.
-let relativeFilenames = (dir, exclusions) => readDir(dir, exclusions).map(n => n.slice(dir.length))
+let slice = start => thing => thing.slice(start)
+
+// Path Utils
+let relativeFilenames = (dir, exclusions) => readDir(dir, exclusions).map(n => slice(dir.length)(n))
+
 let noExt = file => file.slice(0, _.lastIndexOf('.', file))
-let test = regex => str => regex.test(str)
+let test = regex => str => regex.test(str) // 
 
-// Core.
-let filter = _.filter(test(/.js|.html|.jsx|.ts|.coffee|.less|.css|.sass|.hbs|.ejs/)) // Create a default filter.
+// Core
+let defaultFilter = _.filter(test(/.js|.html|.jsx|.ts|.coffee|.less|.css|.sass|.hbs|.ejs/))
 let metagen = dir => relativeFilenames(dir.path, dir.exclusions || [dir.output || '__all.js'])
-    .then(dir.filter || filter)
+    .then(dir.filter || defaultFilter)
     .then(files => fs.writeFileAsync(dir.path + (dir.output || '__all.js'), dir.format(files, dir)))
 
-// Define various output formats.
+// Output formats
 metagen.formats = {}
 metagen.formats.commonJS = files => `define(function(require) {
     return {
@@ -30,7 +33,7 @@ metagen.formats.amd = files => `define([
     }
 });`
 
-// Deep Formats.
+// Deep Formats
 let deepKeys = _.map(_.flow(noExt, _.replace(/\//g, '.')))
 let stringify = x => JSON.stringify(x, null, 4)
 let indent = _.replace(/\n/g, '\n    ')
