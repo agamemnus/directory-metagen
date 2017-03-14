@@ -1,30 +1,24 @@
 // Inspired by (but complete rewrite of) requirejs-metagen.
-let _       = require('lodash/fp') // Add lodash helper functions.
-let Promise = require('bluebird')  // Replace promises with the Bluebird Promises library. ("Bluebird cuts corners" -- yikes!)
+let _       = require('lodash/fp')
+let Promise = require('bluebird')
 let readDir = Promise.promisify(require('recursive-readdir')) // Lists all files in a certain directory and all its sub-directories.
-let fs      = Promise.promisifyAll(require('fs')) // Add the filesystem library.
+let fs      = Promise.promisifyAll(require('fs'))
 
 // Define path Utils.
+let relativeFilenames = (dir, exclusions) => readDir(dir, exclusions).map(n => n.slice(dir.length))
 
-// Get all the file names in a certain directory and its sub-directories, excluding the directory path.
-let filesRelative = (dir, exclusions) => readDir(dir, exclusions).map(filename => filename.slice(dir.length))
-
-// Get a file's name without its extension.
 let noExt = file => file.slice(0, _.lastIndexOf('.', file))
 
-// Slightly more convenient way to return a function which performs a certain regex match on a string.
-let stringMatch = regex => str => regex.test(str)
+let test = regex => str => regex.test(str)
 
 // ====================================================================================
 
 // Core.
 
 // Create a default filter.
-let filter = _.filter(stringMatch(/.js|.html|.jsx|.ts|.coffee|.less|.css|.sass|.hbs|.ejs/))
+let filter = _.filter(test(/.js|.html|.jsx|.ts|.coffee|.less|.css|.sass|.hbs|.ejs/))
 
-
-// Define the metagen function.
-let metagen = dir => filesRelative(dir.path, dir.exclusions || [dir.output || '__all.js'])
+let metagen = dir => relativeFilenames(dir.path, dir.exclusions || [dir.output || '__all.js'])
     .then(dir.filter || filter)
     .then(files => fs.writeFileAsync(dir.path + (dir.output || '__all.js'), dir.format(files, dir)))
 
